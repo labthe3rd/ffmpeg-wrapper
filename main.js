@@ -1,13 +1,8 @@
-/*  Created by labthe 3rd
- *  This program converts video files to .mp4
- *  using ffmpeg and cocaine.
- *
- *
- */
-
 const { app, BrowserWindow, ipcMain } = require("electron");
 const path = require("path");
-const { exec } = require("child_process");
+const { spawn } = require("child_process");
+const fs = require("fs");
+const os = require("os");
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -21,9 +16,6 @@ function createWindow() {
   });
 
   mainWindow.loadFile("index.html");
-
-  // Open the DevTools.
-  mainWindow.webContents.openDevTools();
 }
 
 app.whenReady().then(() => {
@@ -38,17 +30,30 @@ app.on("window-all-closed", () => {
   if (process.platform !== "darwin") app.quit();
 });
 
-ipcMain.handle("run-ffmpeg", (event, command) => {
+ipcMain.handle("run-ffmpeg", (event, { inputFile, outputExtension }) => {
   return new Promise((resolve, reject) => {
-    exec(command, (error, stdout, stderr) => {
-      if (error) {
-        console.error(`exec error: ${error}`);
-        reject(`exec error: ${error}`);
-        return;
+    const outputFileName = path.join(os.tmpdir(), `output${outputExtension}`);
+    const command = `ffmpeg -i "${inputFile}" "${outputFileName}" -y`;
+    const process = spawn(command, { shell: true });
+
+    process.stdout.on("data", (data) => {
+      console.log(`stdout: ${data}`);
+    });
+
+    process.stderr.on("data", (data) => {
+      console.log(`stderr: ${data}`);
+    });
+
+    process.on("close", (code) => {
+      if (code === 0) {
+        resolve(outputFileName);
+      } else {
+        reject(`FFmpeg command failed with code ${code}`);
       }
-      console.log(`stdout: ${stdout}`);
-      console.log(`stderr: ${stderr}`);
-      resolve({ stdout, stderr });
     });
   });
+});
+
+ipcMain.handle("save-file", (event, filePath, data) => {
+  fs.writeFileSync(filePath, data);
 });

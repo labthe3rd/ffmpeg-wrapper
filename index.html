@@ -1,35 +1,106 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>Hello Electron</title>
+    <title>ffmpeg-wrapper</title>
+    <style>
+      #spinner {
+        border: 16px solid #f3f3f3;
+        border-top: 16px solid #3498db;
+        border-radius: 50%;
+        width: 120px;
+        height: 120px;
+        animation: spin 2s linear infinite;
+        display: none;
+        margin: auto;
+        margin-top: 20px;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      #timeElapsed {
+        display: none;
+        margin-top: 20px;
+        font-size: 20px;
+      }
+    </style>
   </head>
   <body>
-    <h1>Hello Electron!</h1>
-    <input type="file" id="fileInput" />
-    <button id="runButton">Run FFmpeg</button>
+    <h1>Convert Video</h1>
+    <form id="file_convert_form">
+      <input type="file" id="fileInput" required />
+      <br /><br />
+      <label id="filetype_label" for="filetype_select">Select File Type</label>
+      <select id="filetype_select" name="filetype_select">
+        <option value=".mp4">.mp4</option>
+        <option value=".flv">.flv</option>
+        <option value=".mov">.mov</option>
+      </select>
+      <br /><br />
+      <button id="runButton">Run FFmpeg</button>
+    </form>
+
+    <div id="spinner"></div>
+    <div id="timeElapsed">
+      Time Elapsed: <span id="secondsElapsed">0</span> seconds
+    </div>
 
     <script>
+      let interval;
+
+      const file_convert_form = document.querySelector("#file_convert_form");
+      file_convert_form.addEventListener("submit", (e) => {
+        e.preventDefault();
+      });
+
       document.getElementById("runButton").addEventListener("click", () => {
         const fileInput = document.getElementById("fileInput");
-        if (fileInput.files.length > 0) {
-          const inputFile = fileInput.files[0].path;
-          const outputFile = inputFile.replace(/(\.\w+)$/, "_output.mp4");
-          const command = `ffmpeg -i "${inputFile}" "${outputFile}"`;
+        const fileTypeSelect = document.getElementById("filetype_select");
 
-          window.ffmpeg
-            .run(command)
-            .then((result) => {
-              alert("FFmpeg command executed successfully!");
-              console.log(result.stdout);
-              console.error(result.stderr);
-            })
-            .catch((error) => {
-              alert("Error executing FFmpeg command.");
-              console.error(error);
-            });
-        } else {
-          alert("Please select a file.");
-        }
+        // if (fileInput.files.length > 0) {
+        const inputFile = fileInput.files[0].path;
+        const outputExtension = fileTypeSelect.value;
+
+        document.getElementById("spinner").style.display = "block";
+        document.getElementById("timeElapsed").style.display = "block";
+        let seconds = 0;
+        document.getElementById("secondsElapsed").innerText = seconds;
+        interval = setInterval(() => {
+          seconds += 1;
+          document.getElementById("secondsElapsed").innerText = seconds;
+        }, 1000);
+
+        window.ffmpeg
+          .run({ inputFile, outputExtension })
+          .then((outputFile) => {
+            clearInterval(interval);
+            document.getElementById("spinner").style.display = "none";
+            document.getElementById("timeElapsed").style.display = "none";
+
+            const link = document.createElement("a");
+            link.href = `file://${outputFile}`;
+            link.setAttribute("download", outputFile);
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            document.getElementById("file_convert_form").reset();
+          })
+          .catch((error) => {
+            clearInterval(interval);
+            document.getElementById("spinner").style.display = "none";
+            document.getElementById("timeElapsed").style.display = "none";
+            alert("Error executing FFmpeg command.");
+            console.error(error);
+          });
+        // } else {
+        //   alert("Please select a file.");
+        // }
       });
     </script>
   </body>
