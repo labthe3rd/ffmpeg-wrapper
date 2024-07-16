@@ -1,0 +1,15 @@
+{
+  "name": "ffmpeg-wrapper",
+  "version": "0.0.1",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "keywords": [],
+  "author": "Louis Bersine",
+  "license": "SEE LICENSE IN LICENSE.md",
+  "description": "A simple ffmpeg wrapper.",
+  "devDependencies": {
+    "electron": "^31.2.1"
+  }
+}

@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Hello Electron</title>
+  </head>
+  <body>
+    <h1>Hello Electron!</h1>
+    <input type="file" id="fileInput" />
+    <button id="runButton">Run FFmpeg</button>
+
+    <script>
+      document.getElementById("runButton").addEventListener("click", () => {
+        const fileInput = document.getElementById("fileInput");
+        if (fileInput.files.length > 0) {
+          const inputFile = fileInput.files[0].path;
+          const outputFile = inputFile.replace(/(\.\w+)$/, "_output.mp4");
+          const command = `ffmpeg -i "${inputFile}" "${outputFile}"`;
+
+          window.ffmpeg
+            .run(command)
+            .then((result) => {
+              alert("FFmpeg command executed successfully!");
+              console.log(result.stdout);
+              console.error(result.stderr);
+            })
+            .catch((error) => {
+              alert("Error executing FFmpeg command.");
+              console.error(error);
+            });
+        } else {
+          alert("Please select a file.");
+        }
+      });
+    </script>
+  </body>
+</html>
