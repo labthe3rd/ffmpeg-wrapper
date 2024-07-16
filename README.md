@@ -39,11 +39,6 @@ Follow these steps to get started with the FFmpeg Wrapper:
 2. **Run FFmpeg**: Click the "Run FFmpeg" button to start the conversion. 🛠
 3. **Track Progress**: Watch the progress bar as your file is being processed. ⏳
 
-## 📷 Screenshots
-
-![Screenshot 1](https://via.placeholder.com/800x400.png?text=Screenshot+1)
-![Screenshot 2](https://via.placeholder.com/800x400.png?text=Screenshot+2)
-
 ## 🤝 Contributing
 
 We welcome contributions! Please read our [CONTRIBUTING.md](CONTRIBUTING.md) for details on our code of conduct and the process for submitting pull requests. 🛠✨
