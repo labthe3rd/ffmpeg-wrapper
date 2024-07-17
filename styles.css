@@ -1,0 +1,33 @@
+/* comment */
+#timeElapsed {
+    display: none;
+    margin-top: 20px;
+    font-size: 10px;
+  }
+
+  #spinner {
+    border: 16px solid #f3f3f3;
+    border-top: 16px solid rgb(234,0,255);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    animation: spin 4s linear infinite;
+    display: none;
+    margin: auto;
+    margin-top: 20px;
+  }
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+      border-top: 16px solid rgb(255, 0, 0);
+    }
+    50% {
+      transform: rotate(180deg);
+      border-top: 16px solid rgb(0, 255, 251);
+    }
+    100% {
+      transform: rotate(360deg);
+      border-top: 16px solid rgb(255,0,0);
+    }
+  }

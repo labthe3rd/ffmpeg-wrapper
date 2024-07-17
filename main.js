@@ -4,6 +4,7 @@ const path = require("path");
 const { spawn } = require("child_process");
 const fs = require("fs");
 const os = require("os");
+const debug = false;
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -17,7 +18,10 @@ function createWindow() {
   });
 
   mainWindow.loadFile("index.html");
-  mainWindow.webContents.openDevTools();
+  if(debug){
+    mainWindow.webContents.openDevTools();
+  }
+  
 }
 
 app.whenReady().then(() => {
