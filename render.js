@@ -35,7 +35,7 @@ document
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        //   document.getElementById("file_convert_form").reset();
+        document.getElementById("file_convert_form").reset();
       })
       .catch((error) => {
         clearInterval(interval);
