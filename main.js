@@ -1,4 +1,5 @@
 const { app, BrowserWindow, ipcMain } = require("electron");
+const electronReload = require("electron-reload");
 const path = require("path");
 const { spawn } = require("child_process");
 const fs = require("fs");
@@ -16,6 +17,7 @@ function createWindow() {
   });
 
   mainWindow.loadFile("index.html");
+  mainWindow.webContents.openDevTools();
 }
 
 app.whenReady().then(() => {
