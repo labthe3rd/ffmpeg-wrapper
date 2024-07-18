@@ -4,7 +4,7 @@ const path = require("path");
 const { spawn } = require("child_process");
 const fs = require("fs");
 const os = require("os");
-const debug = false;
+const debug = true;
 
 function createWindow() {
   const mainWindow = new BrowserWindow({
@@ -59,7 +59,32 @@ ipcMain.handle("run-ffmpeg", (event, { inputFile, outputExtension }) => {
     });
   });
 });
-
 ipcMain.handle("save-file", (event, filePath, data) => {
   fs.writeFileSync(filePath, data);
 });
+
+ipcMain.handle("run-ffprobe", (event, { selectFile }) => {
+  return new Promise((resolve, reject) => {
+    const command = `ffprobe -i "${selectFile}"`;
+    const process = spawn(command, { shell: true });
+    let output = '';
+
+    process.stdout.on("data", (data) => {
+      console.log(`stdout: ${data}`);
+      output += data.toString();
+    });
+
+    process.stderr.on("data", (data) => {
+      console.log(`stderr: ${data}`);
+      output += data.toString();
+    });
+
+    process.on('exit', () => {
+      output = output.substring(output.indexOf("Metadata:"));
+      resolve(output);
+    });
+
+  })
+});
+
+

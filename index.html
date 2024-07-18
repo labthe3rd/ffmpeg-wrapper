@@ -10,19 +10,24 @@
     <link rel="stylesheet" type="text/css" href="styles.css">
   </head>
   <body>
-    <h1 id="file_convert_header">Convert Video</h1>
-    <form id="file_convert_form">
-      <input type="file" id="fileInput" required />
-      <br /><br />
-      <label id="filetype_label" for="filetype_select">Select File Type</label>
-      <select id="filetype_select" name="filetype_select">
-        <option value=".mp4">.mp4</option>
-        <option value=".flv">.flv</option>
-        <option value=".mov">.mov</option>
-      </select>
-      <br /><br />
-      <button id="runButton">Run FFmpeg</button>
-    </form>
+    <h1 id="main_header">FFMPEG Tools</h1>
+    <br />
+    <div id="file_convert_container">
+      <h2 id="file_convert_header">Convert Video</h2>
+      <form id="file_convert_form">
+        <input type="file" id="file_convert_input" required />
+        <br /><br />
+        <label id="filetype_label" for="filetype_select">Select File Type</label>
+        <select id="filetype_select" name="filetype_select">
+          <option value=".mp4">.mp4</option>
+          <option value=".flv">.flv</option>
+          <option value=".mov">.mov</option>
+        </select>
+        <br /><br />
+        <button id="runButton">Run FFmpeg</button>
+      </form>
+    </div>
+
 
     <div id="spinner"></div>
     <div id="timeElapsed">
